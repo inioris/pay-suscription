@@ -1,6 +1,9 @@
 <?php
+
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\PageController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,5 +19,5 @@ Route::get('/', [PageController::class, 'index']);
 
 // PayPal
 Route::post('/create-order', [PayPalController::class, 'createOrder'])->name('create-order');
+Route::get('/capture-order', [PayPalController::class, 'captureOrder'])->name('capture-order');
 
-// Route::get('/list-orders', [PayPalController::class, 'getOrderList']);

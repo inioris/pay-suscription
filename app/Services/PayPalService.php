@@ -6,7 +6,6 @@ use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Core\SandboxEnvironment;
 use PayPalCheckoutSdk\Orders\OrdersCreateRequest;
 use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
-use PayPalCheckoutSdk\Orders\OrdersListRequest;
 
 class PayPalService
 {
@@ -32,6 +31,10 @@ class PayPalService
                     ],
                 ],
             ],
+            "application_context" => [
+                 "cancel_url" =>  route('/'),
+                 "return_url" => route('capture-order'),
+            ]
         ];
 
         return $this->client->execute($request);
