@@ -20,7 +20,7 @@ class PayPalController extends Controller
     public function captureOrder(PayPalService $paypalService)
     {
         $orderId = request('order_id');
-
+        dd($orderId);
         $order = $paypalService->captureOrder($orderId);
 
         $data = [

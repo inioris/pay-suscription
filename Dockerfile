@@ -1,35 +1,45 @@
-FROM php:7.1.3-apache
+FROM php:7.3-apache
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
+# Instalar dependencias y extensiones necesarias
+RUN apt-get update && \
+    apt-get install -y \
     libzip-dev \
     unzip \
     git \
-    && docker-php-ext-install zip
+    && docker-php-ext-install zip pdo_mysql
 
-# Enable Apache rewrite module
-RUN a2enmod rewrite
+# Configurar Apache
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
+    a2enmod rewrite
 
-# Set the document root
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+# Copiar archivos del proyecto
+COPY . .
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Configurar directorios y permisos
+RUN mkdir -p storage/framework/{sessions,views,cache} && \
+    chown -R www-data:www-data storage bootstrap/cache && \
+    chmod -R 775 storage bootstrap/cache && \
+    mkdir -p storage/logs && \
+    chmod -R 777 storage/logs
 
-# Set working directory
-WORKDIR /var/www/html
+# Copiar archivo de configuración de host de Apache
+COPY apache.conf /etc/apache2/sites-available/000-default.conf
 
-# Copy the project files to the working directory
-COPY . /var/www/html
+# Instalar Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install project dependencies
-RUN composer install --no-interaction
+# Instalar dependencias de Composer
+RUN composer install --no-scripts --no-autoloader
 
-# Set the correct permissions
-RUN chown -R www-data:www-data /var/www/html/storage
+# Generar la clave de la aplicación
+RUN php artisan key:generate
 
-# Expose port 80 and start Apache server
+# Ejecutar el comando de carga de clases de Composer
+RUN composer dump-autoload --optimize
+
+# Configurar el puerto
+ENV PORT=80
 EXPOSE 80
+
+# Iniciar el servidor Apache
 CMD ["apache2-foreground"]
