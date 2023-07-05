@@ -18,3 +18,7 @@
 #For Suministrar config of paypal
 - PAYPAL_CLIENT_ID
 - PAYPAL_CLIENT_SECRET
+
+#user for test
+- user: sb-kkvrs26533484@personal.example.com
+- password: qtD1J'{>
