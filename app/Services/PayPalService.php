@@ -32,7 +32,7 @@ class PayPalService
                 ],
             ],
             "application_context" => [
-                 "cancel_url" =>  route('/'),
+                 "cancel_url" => "http://localhost:8001/",
                  "return_url" => route('capture-order'),
             ]
         ];
