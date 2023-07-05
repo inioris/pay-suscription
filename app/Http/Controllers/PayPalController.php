@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\PayPalService;
-use PayPalCheckoutSdk\Orders\OrdersGetRequest;
-use PayPalCheckoutSdk\Orders\OrdersListRequest;
 
 class PayPalController extends Controller
 {
@@ -20,7 +18,6 @@ class PayPalController extends Controller
     public function captureOrder(PayPalService $paypalService)
     {
         $orderId = request('order_id');
-        dd($orderId);
         $order = $paypalService->captureOrder($orderId);
 
         $data = [
@@ -31,26 +28,45 @@ class PayPalController extends Controller
         return view('payment-success', $data);
     }
 
-    public function getOrderList(PayPalService $paypalService)
-    {
-        $request = new OrdersListRequest();
-        $request->prefer('return=representation');
-
-        try {
-            $response = $paypalService->client->execute($request);
-            $orders = $response->result->orders;
-
-            foreach ($orders as $order) {
-                $orderId = $order->id;
-                $paymentDate = $order->payment_date;
-                $amount = $order->amount;
-                $status = $order->status;
-            }
-        } catch (\Exception $ex) {
-            dd($ex);
-        }
-        $name = 'Lista de Suscripciones';
-        return view('list-orders', compact('orders', 'name'));
-    }
+//     public function getOrderList(PayPalService $paypalService)
+//     {
+//         $request = new OrdersListRequest();
+//         $request->prefer('return=representation');
+//
+//         try {
+//             $response = $paypalService->client->execute($request);
+//             $orders = $response->result->orders;
+//
+//             foreach ($orders as $order) {
+//                 $orderId = $order->id;
+//                 $paymentDate = $order->payment_date;
+//                 $amount = $order->amount;
+//                 $status = $order->status;
+//             }
+//         } catch (\Exception $ex) {
+//             dd($ex);
+//         }
+//         $name = 'Lista de Suscripciones';
+//         return view('list-orders', compact('orders', 'name'));
+//     }
+//     public function getOrderList(PayPalService $paypalService)
+//     {
+//         try {
+//             $response = $paypalService->getOrderList();
+//             $orders = $response->result->orders;
+//
+//             foreach ($orders as $order) {
+//                $orderId = $order->id;
+//                $paymentDate = $order->payment_date;
+//                $amount = $order->amount;
+//                $status = $order->status;
+//             }
+//
+//             $name = 'Lista de Suscripciones';
+//             return view('list-orders', compact('orders', 'name'));
+//         } catch (\Exception $ex) {
+//             dd($ex);
+//         }
+//     }
 
 }

@@ -17,4 +17,4 @@ Route::get('/', [PageController::class, 'index']);
 // PayPal
 Route::post('/create-order', [PayPalController::class, 'createOrder'])->name('create-order');
 
-Route::get('/list-orders', [PayPalController::class, 'getOrderList']);
+// Route::get('/list-orders', [PayPalController::class, 'getOrderList']);

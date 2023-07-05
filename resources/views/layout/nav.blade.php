@@ -7,10 +7,6 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Inicio</a>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="listOrders" href="/list-orders">Lista de Ordenes</a>
-                </li>
             </ul>
         </div>
 
