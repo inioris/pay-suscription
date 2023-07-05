@@ -12,6 +12,7 @@ class PayPalController extends Controller
         $paypalService = new PayPalService();
         $order = $paypalService->createOrder($price);
 
+
         return redirect()->away($order->result->links[1]->href);
     }
 
